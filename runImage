@@ -1,0 +1,19 @@
+#!/bin/bash
+mountDir="$1"
+
+if [ -d "$mountDir" ]; then
+	# Allow docker containers to access files in the mounted volume
+	# See https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Resource_Management_and_Linux_Containers_Guide/sec-Sharing_Data_Across_Containers.html :
+	# Backup permissions of the original directory first
+	tempName="$(mktemp)"
+	chcon --reference="$mountDir" "$tempName"
+	chcon -Rt svirt_sandbox_file_t "$mountDir"
+	docker run -it --volume="$mountDir":/home/rust/dev/:rw perseids/rust-development-docker
+	# Recursively restore SELinux permissions to the original ones (of the directory):
+	chcon -R --reference="$tempName" "$mountDir"
+	rm "$tempName"
+else
+	echo '"'$mountDir'"' does not exist!
+	exit 1
+fi
+

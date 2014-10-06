@@ -12,4 +12,4 @@ WORKDIR /home/rust/dev
 USER root
 COPY vimrc /home/rust/.vimrc
 RUN chown rust:rust /home/rust/.vimrc
-CMD apt-get update && apt-get upgrade && su rust
+CMD apt-get update && apt-get upgrade -y && su rust
