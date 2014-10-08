@@ -8,6 +8,7 @@ if [ -d "$mountDir" ]; then
 	tempName="$(mktemp)"
 	chcon --reference="$mountDir" "$tempName"
 	chcon -Rt svirt_sandbox_file_t "$mountDir"
+	docker pull perseids/rust-development-docker
 	docker run -it --volume="$mountDir":/home/dev/project/:rw perseids/rust-development-docker
 	# Recursively restore SELinux permissions to the original ones (of the directory):
 	chcon -R --reference="$tempName" "$mountDir"
