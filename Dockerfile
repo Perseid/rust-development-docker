@@ -8,6 +8,5 @@ USER dev
 RUN git clone https://github.com/wting/rust.vim /home/dev/.vim
 WORKDIR /home/dev/project
 USER root
-COPY vimrc /home/dev/.vimrc
 RUN chown -R dev:dev /home/dev/
 CMD apt-get update && apt-get upgrade -y && su dev
